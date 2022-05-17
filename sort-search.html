@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Search and Sort Table using List.js</title>
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div id="players"> 
+  Search <input class="search" placeholder=" Search" /> 
+  <button class="sort" data-sort="name">Sort by Name</button>
+  <button class="sort" data-sort="team">Sort by Team</button>
+  <button class="sort" data-sort="number">Sort by Number</button>
+  <hr>
+  Click Table Column Head
+  <hr>
+  <table>
+    <thead>
+      <tr>
+        <th class="sort" data-sort="name">Name</th>
+        <th class="sort" data-sort="team">Team</th>
+        <th class="sort" data-sort="number">Number</th>
+      </tr>
+    </thead>
+    <tbody class="list">
+      <tr>
+        <td class="name">Jonny</td>
+        <td class="team">Green</td>
+        <td class="number">1</td>
+      </tr>
+      <tr>
+        <td class="name">Brad</td>
+        <td class="team">Red</td>
+        <td class="number">5</td>
+      </tr>
+      <tr>
+        <td class="name">Jay</td>
+        <td class="team">Green</td>
+        <td class="number">8</td>
+      </tr>
+      <tr>
+      <td class="name">Steve</td>
+      <td class="team">Orange</td>
+      <td class="number">6</td>
+    </tr>
+      <tr>
+        <td class="name">Ken</td>
+        <td class="team">Red</td>
+        <td class="number">3</td>
+      </tr>
+    <tr>
+      <td class="name">Marty</td>
+      <td class="team">Blue</td>
+      <td class="number">4</td>
+    </tr>
+    <tr>
+      <td class="name">Gary</td>
+      <td class="team">Blue</td>
+      <td class="number">2</td>
+    </tr>
+    <tr>
+      <td class="name">Tommy</td>
+      <td class="team">Orange</td>
+      <td class="number">9</td>
+    </tr>
+  </table>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+	<meta charset='utf-8'>
+	<meta name='viewport' content="width=device-width,initial-scale=1.0">
+	<title>Student Management</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+		integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+</head>
+
+<body>
+	<h2 class="bg-primary text-white p-4">Student Management</h2>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4">
+				<form id="stdInfoForm">
+					<div class="form-group">
+						<label for="fname">First Name</label>
+						<input type="text" id="fname" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<label for="lname">Last Name</label>
+						<input type="text" id="lname" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<label for="standard">Standard</label>
+						<input type="number" id="standard" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<label for="rollNo">RollNo</label>
+						<input type="number" id="rollNo" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<!-- <button type="submit" class="btn btn-success">Submit</button> -->
+						<input type="submit" value="SUBMIT" class="btn btn-success" id="submitBtn">
+						<input type="button" value="UPDATE" class="btn btn-success d-none" id="updateBtn">
+					</div>
+				</form>
+			</div>
+			<div class="col-md-8">
+				<table class="table table-bordered">
+					<thead>
+						<th>Sr. No</th>
+						<th>First Name</th>
+						<th>Last Name</th>
+						<th>Standard</th>
+						<th>RollNo</th>
+						<th>Edit</th>
+						<th>Delete</th>
+					</thead>
+					<tbody id="stdData">
+
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<script>
+
+		let cl = console.log;
+
+		const stdInfoForm = document.getElementById('stdInfoForm');
+		// cl(stdInfoForm);
+		const fname = document.getElementById('fname');
+		const lname = document.getElementById('lname');
+		const standard = document.getElementById('standard');
+		const rollNo = document.getElementById('rollNo');
+		const stdData = document.getElementById('stdData');
+		const submitBtn = document.getElementById('submitBtn');
+		const updateBtn = document.getElementById('updateBtn');
+
+		let stdArray = [];
+		if (localStorage.getItem('setStdInfo')) {
+			// stdArray = JSON.parse(localStorage.getItem('setStdInfo'));
+			stdArray = getLocalData();
+		}
+
+		const onSubmitHandler = eve => {
+			eve.preventDefault();
+			// cl(eve);
+			let obj = {
+				getFname: fname.value,
+				getLname: lname.value,
+				getStandard: standard.value,
+				getRollNo: rollNo.value,
+				id: uuidv4()
+			}
+			cl(obj);
+			stdArray.push(obj);
+			// cl(stdArray);
+			// localStorage.setItem('setStdInfo', JSON.stringify(stdArray));
+			setLocaldata(stdArray);
+			stdInfoForm.reset();
+			templating(stdArray);
+		};
+		function templating(arr) {
+			let result = "";
+			arr.forEach((ele, i) => {
+				result += `
+        <tr>
+            <td>${i + 1}</td>
+            <td>${ele.getFname}</td>
+            <td>${ele.getLname}</td>
+            <td>${ele.getRollNo}</td>
+            <td>${ele.getStandard}</td>
+            <td>
+                <button class='btn btn-success' data-id='${ele.id}' onclick="onEditHandler(this)">Edit</button>
+            </td>
+            <td>
+                <button class='btn btn-danger' data-id='${ele.id}' onclick="onDeleteHandler(this)">Delete</button>
+            </td>
+        </tr>`
+			});
+			stdData.innerHTML = result;
+		};
+		// cl(stdArray)
+		templating(stdArray);
+
+		function uuidv4() {
+			return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+				(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+			);
+		}
+
+		const onEditHandler = ele => {
+			// cl('Edited!!!');
+			// cl(ele);
+			cl(ele.getAttribute('data-id'));
+			updateBtn.classList.remove("d-none");
+			submitBtn.classList.add("d-none");
+			let getId = ele.getAttribute('data-id');
+			localStorage.setItem('setId', getId);
+			let getData = getLocalData();
+			// cl(getData);
+			let getObj = getData.filter(ele => ele.id === getId);
+			cl(getObj);
+			fname.value = getObj[0].getFname;
+			lname.value = getObj[0].getLname;
+			standard.value = getObj[0].getStandard;
+			rollNo.value = getObj[0].getRollNo;
+		};
+		const onDeleteHandler = eve => {
+			// cl('Deleted!!!');
+			let getId = eve.getAttribute('data-id');
+
+			let getData = getLocalData();
+
+			let newData = getData.filter(ele => ele.id !== getId);
+			templating(newData);
+			// localStorage.setItem('setStdInfo', JSON.stringify(newData));
+			setLocaldata(newData);
+		};
+		const onUpdateHandler = (eve) => {
+			cl(eve.target);
+			let getId = localStorage.getItem('setId');
+			// cl(getId);
+			let getData = getLocalData();
+			// cl(getData);
+
+			getData.forEach(ele => {
+				if (ele.id === getId) {
+					ele.getFname = fname.value;
+					ele.getLname = lname.value;
+					ele.getStandard = standard.value;
+					ele.getRollNo = rollNo.value;
+				}
+			})
+			// localStorage.setItem('setStdInfo', JSON.stringify(getData));
+			setLocaldata(getData);
+			templating(getData);
+			stdInfoForm.reset();
+			updateBtn.classList.add("d-none");
+			submitBtn.classList.remove("d-none");
+		}
+
+		function getLocalData() {
+			return JSON.parse(localStorage.getItem('setStdInfo'));
+		}
+		function setLocaldata(arr) {
+			localStorage.setItem('setStdInfo', JSON.stringify(arr));
+		}
+
+		stdInfoForm.addEventListener('submit', onSubmitHandler);
+		updateBtn.addEventListener('click', onUpdateHandler)
+
+	</script>
+</body>
+
+</html>
